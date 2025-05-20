@@ -7,15 +7,32 @@ import { bioDataQuestions, generalQuestions, networkingQuestions, securityQuesti
 import { calculateScores } from '../../utils/scoring';
 import { getRecommendations } from '../../utils/recommendations';
 
-export function QuizForm() {
+// Define types
+interface Question {
+  id: string;
+  text: string;
+  type: string;
+  options?: string[];
+  required?: boolean;
+  points?: {
+    [key: string]: number;
+  };
+  category?: string;
+}
+
+interface Answers {
+  [key: string]: string;
+}
+
+export function QuizForm(): JSX.Element {
   const router = useRouter();
-  const [section, setSection] = useState(1);
-  const [answers, setAnswers] = useState({});
-  const [error, setError] = useState('');
+  const [section, setSection] = useState<number>(1);
+  const [answers, setAnswers] = useState<Answers>({});
+  const [error, setError] = useState<string>('');
   
   const totalSections = 4; // Bio, General, Networking, Security
   
-  const getCurrentSectionQuestions = () => {
+  const getCurrentSectionQuestions = (): Question[] => {
     switch(section) {
       case 1: return bioDataQuestions;
       case 2: return generalQuestions;
@@ -25,7 +42,7 @@ export function QuizForm() {
     }
   };
   
-  const getSectionTitle = () => {
+  const getSectionTitle = (): string => {
     switch(section) {
       case 1: return "Personal Information";
       case 2: return "General IT Knowledge";
@@ -35,14 +52,14 @@ export function QuizForm() {
     }
   };
   
-  const handleChange = (questionId, value) => {
+  const handleChange = (questionId: string, value: string): void => {
     setAnswers(prev => ({
       ...prev,
       [questionId]: value
     }));
   };
   
-  const validateSection = () => {
+  const validateSection = (): boolean => {
     const questions = getCurrentSectionQuestions();
     let isValid = true;
     let errorMsg = '';
@@ -58,7 +75,7 @@ export function QuizForm() {
     return isValid;
   };
   
-  const handleNext = () => {
+  const handleNext = (): void => {
     if (validateSection()) {
       if (section < totalSections) {
         setSection(section + 1);
@@ -68,7 +85,7 @@ export function QuizForm() {
         const scores = calculateScores(answers);
         const recommendations = getRecommendations(scores);
         
-        // Store results in localStorage (or could use a more robust state management)
+        // Store results in localStorage
         localStorage.setItem('quizResults', JSON.stringify({
           answers,
           scores,
@@ -81,14 +98,14 @@ export function QuizForm() {
     }
   };
   
-  const handleBack = () => {
+  const handleBack = (): void => {
     if (section > 1) {
       setSection(section - 1);
       window.scrollTo(0, 0);
     }
   };
   
-  const renderQuestion = (question) => {
+  const renderQuestion = (question: Question): JSX.Element | null => {
     switch(question.type) {
       case 'text':
       case 'email':
@@ -114,7 +131,7 @@ export function QuizForm() {
             required={question.required}
           >
             <option value="">Select an option</option>
-            {question.options.map((option) => (
+            {question.options?.map((option) => (
               <option key={option} value={option}>
                 {option}
               </option>
@@ -125,7 +142,7 @@ export function QuizForm() {
       case 'radio':
         return (
           <div className="flex flex-col space-y-2">
-            {question.options.map((option) => (
+            {question.options?.map((option) => (
               <label key={option} className="flex items-center space-x-2 cursor-pointer">
                 <input
                   type="radio"

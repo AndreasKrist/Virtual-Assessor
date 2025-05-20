@@ -1,7 +1,34 @@
-export const calculateScores = (answers) => {
+import { generalQuestions, networkingQuestions, securityQuestions } from '../data/questionsData';
+
+// Define types for better TypeScript support
+interface Answers {
+  [questionId: string]: string;
+}
+
+interface Score {
+  categoryScores: {
+    [category: string]: number;
+  };
+  categoryPercentages: {
+    [category: string]: number;
+  };
+  overallScore: number;
+  overallMaxScore: number;
+  overallPercentage: number;
+}
+
+interface Question {
+  id: string;
+  points?: {
+    [answer: string]: number;
+  };
+  category?: string;
+}
+
+export const calculateScores = (answers: Answers): Score => {
   const categories = ["general", "networking", "security"];
-  const scores = {};
-  const maxScores = {};
+  const scores: {[category: string]: number} = {};
+  const maxScores: {[category: string]: number} = {};
   
   // Initialize scores
   categories.forEach(category => {
@@ -14,14 +41,14 @@ export const calculateScores = (answers) => {
     const answer = answers[questionId];
     const questionType = questionId.charAt(0);
     
-    let category;
+    let category: string | undefined;
     if (questionType === 'g') category = 'general';
     else if (questionType === 'n') category = 'networking';
     else if (questionType === 's') category = 'security';
     else return; // Skip biodata questions
     
     // Find the question to get points
-    let questions;
+    let questions: Question[] = [];
     if (category === 'general') questions = generalQuestions;
     else if (category === 'networking') questions = networkingQuestions;
     else if (category === 'security') questions = securityQuestions;
@@ -34,7 +61,7 @@ export const calculateScores = (answers) => {
   });
   
   // Calculate percentages
-  const percentages = {};
+  const percentages: {[category: string]: number} = {};
   categories.forEach(category => {
     percentages[category] = maxScores[category] > 0 ? 
       Math.round((scores[category] / maxScores[category]) * 100) : 0;

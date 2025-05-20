@@ -1,4 +1,15 @@
-export const courseRecommendations = [
+export interface Course {
+  id: string;
+  title: string;
+  description: string;
+  category: string;
+  minScore: number;
+  maxScore: number;
+  level: string;
+  duration: string;
+}
+
+export const courseRecommendations: Course[] = [
   {
     id: "c1",
     title: "Computer Basics for Beginners",

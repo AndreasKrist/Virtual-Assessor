@@ -1,4 +1,9 @@
-export default function QuizProgress({ currentSection, totalSections }) {
+interface QuizProgressProps {
+  currentSection: number;
+  totalSections: number;
+}
+
+export default function QuizProgress({ currentSection, totalSections }: QuizProgressProps): JSX.Element {
   return (
     <div className="mb-6">
       <div className="w-full bg-gray-200 rounded-full h-2.5">

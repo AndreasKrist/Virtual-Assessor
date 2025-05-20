@@ -1,4 +1,25 @@
-export const bioDataQuestions = [
+// Define interfaces for question types
+export interface BioQuestion {
+  id: string;
+  text: string;
+  type: string;
+  options?: string[];
+  required?: boolean;
+}
+
+export interface AssessmentQuestion {
+  id: string;
+  text: string;
+  type: string;
+  options: string[];
+  points: {
+    [key: string]: number;
+  };
+  category: string;
+}
+
+// Bio data questions
+export const bioDataQuestions: BioQuestion[] = [
   {
     id: "fullName",
     text: "Full Name",
@@ -26,7 +47,8 @@ export const bioDataQuestions = [
   },
 ];
 
-export const generalQuestions = [
+// General IT questions
+export const generalQuestions: AssessmentQuestion[] = [
   {
     id: "g1",
     text: "Do you know how to power up/down and operate a desktop computer or laptop?",
@@ -69,7 +91,8 @@ export const generalQuestions = [
   },
 ];
 
-export const networkingQuestions = [
+// Networking questions
+export const networkingQuestions: AssessmentQuestion[] = [
   {
     id: "n1",
     text: "Do you know what Internet is and what is used for?",
@@ -112,7 +135,8 @@ export const networkingQuestions = [
   },
 ];
 
-export const securityQuestions = [
+// Security questions
+export const securityQuestions: AssessmentQuestion[] = [
   {
     id: "s1",
     text: "Do you understand the importance of passwords?",

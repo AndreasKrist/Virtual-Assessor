@@ -6,10 +6,34 @@ import Header from '../../components/Header';
 import Footer from '../../components/Footer';
 import Link from 'next/link';
 
-export default function Results() {
+// Define types
+interface CategoryPercentages {
+  [key: string]: number;
+}
+
+interface Scores {
+  categoryPercentages: CategoryPercentages;
+  overallPercentage: number;
+}
+
+interface Course {
+  id: string;
+  title: string;
+  description: string;
+  category: string;
+  level: string;
+  duration: string;
+}
+
+interface QuizResults {
+  scores: Scores;
+  recommendations: Course[];
+}
+
+export default function Results(): JSX.Element {
   const router = useRouter();
-  const [results, setResults] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [results, setResults] = useState<QuizResults | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
   
   useEffect(() => {
     // Load results from localStorage
@@ -63,13 +87,13 @@ export default function Results() {
   
   const { scores, recommendations } = results;
   
-  const getScoreColor = (percentage) => {
+  const getScoreColor = (percentage: number): string => {
     if (percentage >= 80) return "text-green-600";
     if (percentage >= 50) return "text-yellow-600";
     return "text-red-600";
   };
   
-  const getCategoryEmoji = (category) => {
+  const getCategoryEmoji = (category: string): string => {
     switch(category) {
       case 'general': return '💻';
       case 'networking': return '🌐';
@@ -78,7 +102,7 @@ export default function Results() {
     }
   };
   
-  const getLevelBadge = (level) => {
+  const getLevelBadge = (level: string): JSX.Element | null => {
     switch(level) {
       case 'Beginner':
         return <span className="bg-green-100 text-green-800 px-2 py-1 rounded text-xs font-medium">Beginner</span>;
@@ -170,7 +194,7 @@ export default function Results() {
           <div className="bg-white p-6 rounded-lg shadow-md border border-gray-200">
             <h2 className="text-2xl font-bold mb-6 text-blue-600 text-center">Recommended Courses for You</h2>
             
-            {recommendations.length > 0 ? (
+            {recommendations && recommendations.length > 0 ? (
               <div className="grid gap-6">
                 {recommendations.map((course) => (
                   <div key={course.id} className="border rounded-lg p-4 transition-all hover:shadow-md">

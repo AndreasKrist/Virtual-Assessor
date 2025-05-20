@@ -1,5 +1,25 @@
-export const getRecommendations = (scores) => {
-  const recommendations = [];
+import { courseRecommendations } from '../data/coursesData';
+
+// Define types for better TypeScript support
+interface Scores {
+  categoryPercentages: {
+    [key: string]: number;
+  };
+}
+
+interface Course {
+  id: string;
+  title: string;
+  description: string;
+  category: string;
+  minScore: number;
+  maxScore: number;
+  level: string;
+  duration: string;
+}
+
+export const getRecommendations = (scores: Scores): Course[] => {
+  const recommendations: Course[] = [];
   
   // Get category-specific recommendations
   Object.entries(scores.categoryPercentages).forEach(([category, percentage]) => {
@@ -17,28 +37,4 @@ export const getRecommendations = (scores) => {
     const categoryA = a.category;
     const categoryB = b.category;
     const percentageA = scores.categoryPercentages[categoryA];
-    const percentageB = scores.categoryPercentages[categoryB];
-    
-    // Lower percentage categories get priority
-    if (percentageA !== percentageB) {
-      return percentageA - percentageB;
-    }
-    
-    // Then sort by course level
-    const levelOrder = { "Beginner": 0, "Intermediate": 1, "Advanced": 2 };
-    return levelOrder[a.level] - levelOrder[b.level];
-  });
-  
-  // Remove duplicates
-  const uniqueRecommendations = [];
-  const ids = new Set();
-  
-  recommendations.forEach(recommendation => {
-    if (!ids.has(recommendation.id)) {
-      uniqueRecommendations.push(recommendation);
-      ids.add(recommendation.id);
-    }
-  });
-  
-  return uniqueRecommendations;
-};
+    const percentageB = scores
