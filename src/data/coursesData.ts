@@ -62,7 +62,7 @@ export const courseRecommendations: Course[] = [
   },
   {
     id: "c6",
-    title: "Personal Cybersecurity and Privacy Protection",
+    title: "Personal Cybersecurity and Privacy Protection ",
     description: "Comprehensive strategies to protect your digital life from threats.",
     category: "security",
     minScore: 31,
@@ -70,4 +70,4 @@ export const courseRecommendations: Course[] = [
     level: "Intermediate",
     duration: "3 weeks",
   },
-];
+]; 
